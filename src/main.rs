@@ -1,6 +1,7 @@
 use lib::find_intersection::find_intersection;
 use lib::linear::{LinearEquality, LinearInequality};
 use lib::point::Point;
+use lib::render::render;
 
 pub fn find_matrix_intersections(matrix: &Vec<LinearInequality>) -> Vec<Point> {
     let mut points_of_intersection: Vec<Point> = vec![];
@@ -67,6 +68,7 @@ pub fn find_optimum(matrix: &Vec<LinearInequality>, score_fn: &LinearEquality) -
 }
 
 fn main() {
+    render();
     let matrix = vec![
         LinearInequality(12.0, 4.0, 480.0, false),
         LinearInequality(8.0, 8.0, 640.0, false),
