@@ -1,12 +1,12 @@
 use lib::find_intersection::find_intersection;
-use lib::linear::LinearInequality;
+use lib::linear::{LinearEquality, LinearInequality};
 use lib::point::Point;
 
 pub fn find_matrix_intersections(matrix: &Vec<LinearInequality>) -> Vec<Point> {
     let mut points_of_intersection: Vec<Point> = vec![];
 
-    for i1 in 0..6 {
-        for i2 in i1 + 1..6 {
+    for i1 in 0..matrix.len() {
+        for i2 in i1 + 1..matrix.len() {
             let r1 = &matrix[i1];
             let r2 = &matrix[i2];
 
@@ -56,9 +56,20 @@ fn main() {
         LinearInequality(-1.0, 0.0, 0.0, false),
         LinearInequality(0.0, -1.0, 0.0, false),
     ];
+    let score_fn = LinearEquality(1.0, 3.0, 0.0);
 
     let points_of_intersection = find_matrix_intersections(&matrix);
 
     let vertices = filter_contained_points(&matrix, &points_of_intersection);
-    println!("#{:?}", vertices);
+    let mut scores: Vec<(&Point, f32)> = vertices
+        .into_iter()
+        .map(|point| (point, point.0 * score_fn.0 + score_fn.1 * point.1))
+        .collect();
+
+    scores.sort_by(|a, b| {
+        let v1 = a.1;
+        let v2 = b.1;
+        v2.partial_cmp(&v1).unwrap()
+    });
+    println!("#{:?}", scores);
 }
