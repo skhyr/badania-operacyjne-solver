@@ -23,7 +23,8 @@ pub fn find_matrix_intersections(matrix: &Vec<LinearInequality>) -> Vec<Point> {
 }
 
 pub fn point_satisfies_inequality(point: &Point, r: &LinearInequality) -> bool {
-    point.0 * r.0 + point.1 * r.1 - r.2 <= 0.0
+    let score = point.0 * r.0 + point.1 * r.1 - r.2;
+    score <= 0.0
 }
 
 pub fn point_satisfies_inequalities(point: &Point, rs: &Vec<LinearInequality>) -> bool {
@@ -31,7 +32,6 @@ pub fn point_satisfies_inequalities(point: &Point, rs: &Vec<LinearInequality>) -
         .into_iter()
         .map(|r| point_satisfies_inequality(point, r))
         .collect();
-
     let res2: Vec<bool> = res.into_iter().filter(|e| *e != true).collect();
     res2.is_empty()
 }
@@ -40,24 +40,13 @@ pub fn filter_contained_points<'a>(
     matrix: &Vec<LinearInequality>,
     points: &'a Vec<Point>,
 ) -> Vec<&'a Point> {
-    let vertices: Vec<&Point> = points
+    points
         .into_iter()
         .filter(|point| point_satisfies_inequalities(point, matrix))
-        .collect();
-    vertices
+        .collect()
 }
 
-fn main() {
-    let matrix = vec![
-        LinearInequality(3.0, 1.0, 33.0, false),
-        LinearInequality(1.0, 1.0, 13.0, false),
-        LinearInequality(5.0, 8.0, 80.0, false),
-        LinearInequality(0.0, 1.0, 7.0, false),
-        LinearInequality(-1.0, 0.0, 0.0, false),
-        LinearInequality(0.0, -1.0, 0.0, false),
-    ];
-    let score_fn = LinearEquality(1.0, 3.0, 0.0);
-
+pub fn find_optimum(matrix: &Vec<LinearInequality>, score_fn: &LinearEquality) -> (Point, f32) {
     let points_of_intersection = find_matrix_intersections(&matrix);
 
     let vertices = filter_contained_points(&matrix, &points_of_intersection);
@@ -71,5 +60,22 @@ fn main() {
         let v2 = b.1;
         v2.partial_cmp(&v1).unwrap()
     });
-    println!("#{:?}", scores);
+    // println!("#{:?}", scores);
+    let best_point = scores[0].0;
+    let best_score = scores[0].1;
+    (Point(best_point.0, best_point.1), best_score)
+}
+
+fn main() {
+    let matrix = vec![
+        LinearInequality(12.0, 4.0, 480.0, false),
+        LinearInequality(8.0, 8.0, 640.0, false),
+        LinearInequality(1.0, -1.0, 0.0, false),
+        LinearInequality(-1.0, 0.0, 0.0, false),
+        LinearInequality(0.0, -1.0, 0.0, false),
+    ];
+    let score_fn = LinearEquality(50.0, 10.0, 0.0);
+
+    let res = find_optimum(&matrix, &score_fn);
+    println!("#{:?}", res);
 }
