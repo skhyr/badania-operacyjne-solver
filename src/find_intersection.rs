@@ -11,5 +11,5 @@ pub fn find_intersection(r1: LinearEquality, r2: LinearEquality) -> Point {
 
     let x = (e * d - b * f) / (a * d - b * c);
     let y = (a * f - e * c) / (a * d - b * c);
-    Point(x, y)
+    Point(x.into(), y.into())
 }

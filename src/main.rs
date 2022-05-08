@@ -1,7 +1,7 @@
 use lib::find_intersection::find_intersection;
 use lib::linear::{LinearEquality, LinearInequality};
 use lib::point::Point;
-use lib::render::render;
+use lib::render::main as render;
 
 pub fn find_matrix_intersections(matrix: &Vec<LinearInequality>) -> Vec<Point> {
     let mut points_of_intersection: Vec<Point> = vec![];
@@ -67,8 +67,18 @@ pub fn find_optimum(matrix: &Vec<LinearInequality>, score_fn: &LinearEquality) -
     (Point(best_point.0, best_point.1), best_score)
 }
 
+fn find_temp(r: LinearEquality) -> Vec<Point> {
+    vec![
+        // Point(-100.0, (r.2 + 100.0 * r.0) / r.1),
+        Point(0.0, (r.2 + 0.0 * r.0) / r.1),
+        Point(10.0, (r.2 - 10.0 * r.0) / r.1),
+        Point(40.0, (r.2 - 40.0 * r.0) / r.1),
+        Point(80.0, (r.2 - 80.0 * r.0) / r.1),
+        Point(100.0, (r.2 - 100.0 * r.0) / r.1),
+    ]
+}
+
 fn main() {
-    render();
     let matrix = vec![
         LinearInequality(12.0, 4.0, 480.0, false),
         LinearInequality(8.0, 8.0, 640.0, false),
@@ -76,7 +86,22 @@ fn main() {
         LinearInequality(-1.0, 0.0, 0.0, false),
         LinearInequality(0.0, -1.0, 0.0, false),
     ];
+
+    let matrix2 = vec![
+        LinearInequality(12.0, 4.0, 480.0, false),
+        LinearInequality(8.0, 8.0, 640.0, false),
+        LinearInequality(1.0, -1.0, 0.0, false),
+        LinearInequality(-1.0, 0.0, 0.0, false),
+        LinearInequality(0.0, -1.0, 0.0, false),
+    ];
     let score_fn = LinearEquality(50.0, 10.0, 0.0);
+
+    let hehe: Vec<Vec<Point>> = matrix2
+        .into_iter()
+        .map(|el| find_temp(LinearInequality::to_equality(&el)))
+        .collect();
+
+    render(hehe);
 
     let res = find_optimum(&matrix, &score_fn);
     println!("#{:?}", res);
