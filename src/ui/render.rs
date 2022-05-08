@@ -17,6 +17,7 @@ use tui::{
 };
 
 use crate::ui::chart::{get_chart, get_chart_data};
+use crate::ui::list::get_list;
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     // setup terminal
@@ -85,11 +86,14 @@ fn run_app<B: Backend>(
 fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let size = f.size();
     let chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Ratio(1, 1)].as_ref())
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Ratio(4, 5), Constraint::Ratio(1, 5)].as_ref())
         .split(size);
 
     let chart_data = get_chart_data(&app.equation_system);
     let chart = get_chart(&chart_data);
     f.render_widget(chart, chunks[0]);
+
+    let list = get_list(&app.equation_system);
+    f.render_widget(list, chunks[1]);
 }

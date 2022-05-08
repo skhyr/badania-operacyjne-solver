@@ -1,5 +1,6 @@
 use crate::logic::get_points_range::get_points_range;
 use crate::models::equation::Equation;
+use crate::ui::colors::COLORS;
 use tui::{
     style::{Color, Modifier, Style},
     symbols,
@@ -26,7 +27,7 @@ pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
         .map(|(i, set)| {
             let index: i32 = i.try_into().unwrap();
             Dataset::default()
-                .name("Equation ".to_string() + &index.to_string())
+                // .name("Equation ".to_string() + &index.to_string())
                 .marker(symbols::Marker::Braille)
                 .style(Style::default().fg(COLORS[i]))
                 .graph_type(GraphType::Line)
@@ -60,12 +61,3 @@ pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
                 .labels(vec![]),
         )
 }
-
-static COLORS: [Color; 6] = [
-    Color::Red,
-    Color::Green,
-    Color::Blue,
-    Color::Yellow,
-    Color::Magenta,
-    Color::Cyan,
-];
