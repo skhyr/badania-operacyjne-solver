@@ -1,12 +1,10 @@
 use crate::models::equation::Equation;
 use crate::ui::colors::COLORS;
 use tui::{
-    backend::{Backend, CrosstermBackend},
-    layout::{Constraint, Corner, Direction, Layout},
-    style::{Color, Modifier, Style},
-    text::{Span, Spans},
-    widgets::{Block, Borders, List, ListItem, ListState},
-    Frame, Terminal,
+    layout::Corner,
+    style::Style,
+    text::Span,
+    widgets::{Block, Borders, List, ListItem},
 };
 
 pub fn get_list(equations: &Vec<Equation>) -> List<'static> {

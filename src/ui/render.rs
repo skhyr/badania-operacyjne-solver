@@ -18,6 +18,7 @@ use tui::{
 
 use crate::ui::chart::{get_chart, get_chart_data};
 use crate::ui::list::get_list;
+use crate::ui::result::get_result;
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     // setup terminal
@@ -38,6 +39,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         Equation(-1.0, 0.0, 0.0),
         Equation(0.0, -1.0, 0.0),
     ];
+    app.score_fn = Equation(50.0, 10.0, 0.0);
 
     let res = run_app(&mut terminal, app, tick_rate);
 
@@ -96,6 +98,21 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
     let chart = get_chart(&chart_data, max_x, max_y);
     f.render_widget(chart, chunks[0]);
 
+    let sidebar = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+                Constraint::Percentage(60),
+                Constraint::Percentage(20),
+                Constraint::Percentage(20),
+            ]
+            .as_ref(),
+        )
+        .split(chunks[1]);
+
     let list = get_list(&app.equation_system);
-    f.render_widget(list, chunks[1]);
+    f.render_widget(list, sidebar[0]);
+
+    let result = get_result(&app.equation_system, &app.score_fn);
+    f.render_widget(result, sidebar[1]);
 }
