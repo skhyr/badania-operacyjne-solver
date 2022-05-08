@@ -90,8 +90,10 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .constraints([Constraint::Ratio(4, 5), Constraint::Ratio(1, 5)].as_ref())
         .split(size);
 
-    let chart_data = get_chart_data(&app.equation_system);
-    let chart = get_chart(&chart_data);
+    let max_x = 150.0;
+    let max_y = 150.0;
+    let chart_data = get_chart_data(&app.equation_system, max_x, max_y);
+    let chart = get_chart(&chart_data, max_x, max_y);
     f.render_widget(chart, chunks[0]);
 
     let list = get_list(&app.equation_system);

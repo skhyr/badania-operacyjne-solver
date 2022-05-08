@@ -8,10 +8,10 @@ use tui::{
     widgets::{Axis, Block, Borders, Chart, Dataset, GraphType},
 };
 
-pub fn get_chart_data(data: &Vec<Equation>) -> Vec<Vec<(f64, f64)>> {
+pub fn get_chart_data(data: &Vec<Equation>, max_x: f32, max_y: f32) -> Vec<Vec<(f64, f64)>> {
     data.into_iter()
         .map(|equation| {
-            let res: Vec<(f64, f64)> = get_points_range(equation)
+            let res: Vec<(f64, f64)> = get_points_range(equation, max_x, max_y)
                 .into_iter()
                 .map(|point| (point.0.into(), point.1.into()))
                 .collect();
@@ -20,7 +20,7 @@ pub fn get_chart_data(data: &Vec<Equation>) -> Vec<Vec<(f64, f64)>> {
         .collect::<Vec<Vec<(f64, f64)>>>()
 }
 
-pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
+pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>, max_x: f32, max_y: f32) -> Chart {
     let datasets: Vec<tui::widgets::Dataset> = chart_data
         .into_iter()
         .enumerate()
@@ -50,14 +50,14 @@ pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
             Axis::default()
                 .title("x")
                 .style(Style::default().fg(Color::Gray))
-                .bounds([0.0, 100.0])
+                .bounds([0.0, max_x.into()])
                 .labels(vec![]),
         )
         .y_axis(
             Axis::default()
                 .title("y")
                 .style(Style::default().fg(Color::Gray))
-                .bounds([0.0, 150.0])
+                .bounds([0.0, max_y.into()])
                 .labels(vec![]),
         )
 }
