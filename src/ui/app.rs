@@ -1,21 +1,23 @@
-use crate::point::Point;
+use crate::models::equation::Equation;
 
 pub struct App {
     pub signal1: SinSignal,
-    pub data: Vec<Vec<Point>>,
+    pub equation_system: Vec<Equation>,
     pub signal2: SinSignal,
     pub window: [f64; 2],
+    pub score_fn: Equation,
 }
 
 impl App {
     pub fn new() -> App {
-        let mut signal1 = SinSignal::new(0.2, 3.0, 18.0);
-        let mut signal2 = SinSignal::new(0.1, 2.0, 10.0);
+        let signal1 = SinSignal::new(0.2, 3.0, 18.0);
+        let signal2 = SinSignal::new(0.1, 2.0, 10.0);
         App {
             signal1,
-            data: vec![],
             signal2,
+            equation_system: vec![],
             window: [0.0, 20.0],
+            score_fn: Equation(0.0, 0.0, 0.0),
         }
     }
 

@@ -1,5 +1,3 @@
-pub mod find_intersection;
-pub mod linear;
-pub mod point;
-pub mod render;
+pub mod logic;
+pub mod models;
 pub mod ui;

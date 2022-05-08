@@ -1,4 +1,4 @@
-use crate::point::Point;
+use crate::models::equation::Equation;
 use crate::ui::app::App;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
@@ -18,7 +18,7 @@ use tui::{
 
 use crate::ui::chart::{get_chart, get_chart_data};
 
-pub fn main(hehe: Vec<Vec<Point>>) -> Result<(), Box<dyn Error>> {
+pub fn main() -> Result<(), Box<dyn Error>> {
     // setup terminal
     enable_raw_mode()?;
     let mut stdout = io::stdout();
@@ -29,8 +29,15 @@ pub fn main(hehe: Vec<Vec<Point>>) -> Result<(), Box<dyn Error>> {
     // create app and run it
     let tick_rate = Duration::from_millis(250);
     let mut app = App::new();
+    // test data
+    app.equation_system = vec![
+        Equation(12.0, 4.0, 480.0),
+        Equation(8.0, 8.0, 640.0),
+        Equation(1.0, -1.0, 0.0),
+        Equation(-1.0, 0.0, 0.0),
+        Equation(0.0, -1.0, 0.0),
+    ];
 
-    app.data = hehe;
     let res = run_app(&mut terminal, app, tick_rate);
 
     // restore terminal
@@ -82,7 +89,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &App) {
         .constraints([Constraint::Ratio(1, 1)].as_ref())
         .split(size);
 
-    let chart_data = get_chart_data(&app.data);
+    let chart_data = get_chart_data(&app.equation_system);
     let chart = get_chart(&chart_data);
     f.render_widget(chart, chunks[0]);
 }

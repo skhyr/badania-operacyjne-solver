@@ -1,4 +1,5 @@
-use crate::point::Point;
+use crate::logic::get_points_range::get_points_range;
+use crate::models::equation::Equation;
 use tui::{
     style::{Color, Modifier, Style},
     symbols,
@@ -6,16 +7,16 @@ use tui::{
     widgets::{Axis, Block, Borders, Chart, Dataset, GraphType},
 };
 
-pub fn get_chart_data(data: &Vec<Vec<Point>>) -> Vec<Vec<(f64, f64)>> {
-    let datas = data
-        .into_iter()
-        .map(|line| {
-            line.into_iter()
+pub fn get_chart_data(data: &Vec<Equation>) -> Vec<Vec<(f64, f64)>> {
+    data.into_iter()
+        .map(|equation| {
+            let res: Vec<(f64, f64)> = get_points_range(equation)
+                .into_iter()
                 .map(|point| (point.0.into(), point.1.into()))
-                .collect::<Vec<(f64, f64)>>()
+                .collect();
+            res
         })
-        .collect::<Vec<Vec<(f64, f64)>>>();
-    datas
+        .collect::<Vec<Vec<(f64, f64)>>>()
 }
 
 pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
@@ -48,14 +49,14 @@ pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>) -> Chart {
             Axis::default()
                 .title("x")
                 .style(Style::default().fg(Color::Gray))
-                .bounds([0.0, 200.0])
+                .bounds([0.0, 100.0])
                 .labels(vec![]),
         )
         .y_axis(
             Axis::default()
                 .title("y")
                 .style(Style::default().fg(Color::Gray))
-                .bounds([0.0, 200.0])
+                .bounds([0.0, 150.0])
                 .labels(vec![]),
         )
 }
