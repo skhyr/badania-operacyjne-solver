@@ -1,5 +1,6 @@
 use crate::logic::get_points_range::get_points_range;
 use crate::models::equation::Equation;
+use crate::models::point::Point;
 use crate::ui::colors::COLORS;
 use tui::{
     style::{Color, Modifier, Style},
@@ -20,8 +21,8 @@ pub fn get_chart_data(data: &Vec<Equation>, max_x: f32, max_y: f32) -> Vec<Vec<(
         .collect::<Vec<Vec<(f64, f64)>>>()
 }
 
-pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>, max_x: f32, max_y: f32) -> Chart {
-    let datasets: Vec<tui::widgets::Dataset> = chart_data
+pub fn get_chart<'a, 'b>(chart_data: &'a Vec<Vec<(f64, f64)>>, max_x: f32, max_y: f32) -> Chart {
+    let mut datasets: Vec<tui::widgets::Dataset> = chart_data
         .into_iter()
         .enumerate()
         .map(|(i, set)| {
@@ -35,17 +36,28 @@ pub fn get_chart(chart_data: &Vec<Vec<(f64, f64)>>, max_x: f32, max_y: f32) -> C
         })
         .collect();
 
+    // highlighted_points.into_iter().for_each(|point| {
+    //     datasets.push(
+    //         Dataset::default()
+    //             // .name("Equation ".to_string() + &index.to_string())
+    //             .marker(symbols::Marker::Braille)
+    //             .style(Style::default().fg(Color::White))
+    //             .graph_type(GraphType::Line)
+    //             .data(point),
+    //     );
+    // });
+
+    // datasets.push(
+    //     Dataset::default()
+    //         // .name("Equation ".to_string() + &index.to_string())
+    //         .marker(symbols::Marker::Braille)
+    //         .style(Style::default().fg(Color::White))
+    //         .graph_type(GraphType::Line)
+    //         .data(vec![].as_slice()),
+    // );
+
     Chart::new(datasets)
-        .block(
-            Block::default()
-                .title(Span::styled(
-                    "Chart",
-                    Style::default()
-                        .fg(Color::Cyan)
-                        .add_modifier(Modifier::BOLD),
-                ))
-                .borders(Borders::ALL),
-        )
+        .block(Block::default().title("").borders(Borders::NONE))
         .x_axis(
             Axis::default()
                 .title("x")

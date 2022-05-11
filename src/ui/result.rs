@@ -29,6 +29,6 @@ pub fn get_result(equations: &Vec<Equation>, score_fn: &Equation) -> List<'stati
         .collect();
 
     List::new(list)
-        .block(Block::default().borders(Borders::ALL).title("Equations"))
+        .block(Block::default().borders(Borders::ALL).title("Scores"))
         .start_corner(Corner::TopLeft)
 }

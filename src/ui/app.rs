@@ -1,4 +1,5 @@
 use crate::models::equation::Equation;
+use crate::models::point::Point;
 
 pub struct App {
     pub signal1: SinSignal,
@@ -6,6 +7,7 @@ pub struct App {
     pub signal2: SinSignal,
     pub window: [f64; 2],
     pub score_fn: Equation,
+    pub highlighted_points: Vec<Point>,
 }
 
 impl App {
@@ -18,6 +20,7 @@ impl App {
             equation_system: vec![],
             window: [0.0, 20.0],
             score_fn: Equation(0.0, 0.0, 0.0),
+            highlighted_points: vec![],
         }
     }
 

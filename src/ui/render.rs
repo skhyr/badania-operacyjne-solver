@@ -1,3 +1,5 @@
+use crate::logic::find_intersection::find_system_intersections;
+use crate::logic::find_optimum::find_optimum;
 use crate::models::equation::Equation;
 use crate::ui::app::App;
 use crossterm::{
@@ -40,6 +42,8 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         Equation(0.0, -1.0, 0.0),
     ];
     app.score_fn = Equation(50.0, 10.0, 0.0);
+    app.highlighted_points
+        .push(find_optimum(&app.equation_system, &app.score_fn).0);
 
     let res = run_app(&mut terminal, app, tick_rate);
 
